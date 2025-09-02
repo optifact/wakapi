@@ -8,6 +8,7 @@ import (
 	"github.com/muety/wakapi/models"
 	"github.com/muety/wakapi/services"
 	"net/http"
+	"net/url"
 )
 
 // CheckEffectiveUser extracts the requested user from a URL (like '/users/{user}'), compares it with the currently authorized user and writes an HTTP error if they differ.
@@ -23,6 +24,10 @@ func CheckEffectiveUser(w http.ResponseWriter, r *http.Request, userService serv
 	userParam := chi.URLParam(r, "user")
 	if userParam == "" {
 		userParam = fallback
+	}
+	escapedParam, paramErr := url.QueryUnescape(userParam)
+	if paramErr == nil {
+		userParam = escapedParam
 	}
 
 	authorizedUser := middlewares.GetPrincipal(r)

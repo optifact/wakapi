@@ -33,6 +33,8 @@ type User struct {
 	CreatedAt        models.CustomTime `json:"created_at"`
 	ModifiedAt       models.CustomTime `json:"modified_at"`
 	Photo            string            `json:"photo"`
+	ApiKey           string            `json:"api_key"`
+	IsAdmin          string            `json:"is_admin"`
 }
 
 func NewFromUser(user *models.User) *User {
@@ -48,6 +50,13 @@ func NewFromUser(user *models.User) *User {
 		avatarURL = fmt.Sprintf("%s%s/%s", cfg.Server.GetPublicUrl(), cfg.Server.BasePath, avatarURL)
 	}
 
+	var IsAdmin string
+	if user.IsAdmin {
+		IsAdmin = "Yes"
+	} else {
+		IsAdmin = "No"
+	}
+
 	return &User{
 		ID:          user.ID,
 		DisplayName: user.ID,
@@ -57,6 +66,8 @@ func NewFromUser(user *models.User) *User {
 		CreatedAt:   user.CreatedAt,
 		ModifiedAt:  user.CreatedAt,
 		Photo:       avatarURL,
+		ApiKey:      user.ApiKey,
+		IsAdmin:	 IsAdmin,
 	}
 }
 
